@@ -1,3 +1,5 @@
+/* Encapsule std::queue as a block_queue */
+
 #ifndef BLOCK_QUEUE_H
 #define BLOCK_QUEUE_H
 

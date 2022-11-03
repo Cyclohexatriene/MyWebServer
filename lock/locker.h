@@ -1,3 +1,5 @@
+/* Encapsule system mutex & cond API */
+
 #ifndef LOCKER_H
 #define LOCKER_H
 
