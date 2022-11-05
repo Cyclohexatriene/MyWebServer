@@ -45,7 +45,7 @@ MYSQL* connection_pool::getConnection()
 
     conn = connList.front();
     connList.pop_front();
-    if(!close_log) Log::get_instance() -> write_log(LOG_DEBUG,"get connection successful.");
+    //if(!close_log) Log::get_instance() -> write_log(LOG_DEBUG,"get connection successful.");
 
     m_locker.unlock();
     return conn;
@@ -59,7 +59,7 @@ bool connection_pool::releaseConnection(MYSQL *conn)
     m_locker.lock();
 
     connList.push_back(conn);
-    if(!close_log) Log::get_instance() -> write_log(LOG_DEBUG,"return connection seccessful.");
+    //if(!close_log) Log::get_instance() -> write_log(LOG_DEBUG,"return connection seccessful.");
     m_locker.unlock();
     m_sem.post();
     return true;
