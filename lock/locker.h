@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <pthread.h>
+#include <semaphore.h>
+
 using namespace std;
 
 class locker
@@ -29,6 +31,18 @@ public:
     bool wait(pthread_mutex_t *mutex);
     bool signal();
     bool broadcast();
+};
+
+class sem
+{
+private:
+    sem_t m_sem;
+public:
+    sem();
+    sem(int num);
+    ~sem();
+    bool wait();
+    bool post();
 };
 
 #endif
