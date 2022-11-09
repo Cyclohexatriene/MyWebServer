@@ -1,0 +1,13 @@
+GET http://localhost:4203/xxx.jpg
+
+###
+
+GET http://localhost:4203
+
+###
+
+GET http://localhost:4203/favicon.ico
+
+###
+
+GET http://localhost:9006
