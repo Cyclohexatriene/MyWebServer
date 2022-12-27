@@ -56,7 +56,7 @@ int main()
             {
                 //printf("epoll triggered.\n");
                 int clntfd = accept(serv_sock,NULL,NULL);
-                //printf("Received a request.\n");
+                printf("Received a request.\n");
                 http* conn = new http();
                 conn -> clntfd = clntfd;
                 //printf("clntfd is: %d\n",clntfd);
@@ -66,7 +66,7 @@ int main()
             }
             else if(ev.events & EPOLLIN)
             {
-                //printf("Received a package.\n");
+                printf("Received a package.\n");
                 http* conn = fd2http[ev.data.fd];
                 //printf("%s\n",conn -> package);
                 read(ev.data.fd, conn -> package, sizeof(conn -> package));
@@ -80,8 +80,10 @@ int main()
                 http* conn = fd2http[ev.data.fd];
                 
                 int byte_sent = writev(ev.data.fd, conn -> iov, sizeof(conn -> iov)/sizeof(iovec));
+                //fsync(ev.data.fd);
                 //printf("Datagram sent, bytes: %d\n",byte_sent);
                 writev(1, conn -> iov, sizeof(conn -> iov)/sizeof(iovec));
+                
                 //printf("errno: %d\n",errno);
                 //printf("%s%s%s\n",(char*)conn -> iov[0].iov_base,(char*)conn->iov[1].iov_base,(char*)conn->iov[2].iov_base);
                 
