@@ -15,7 +15,7 @@ class threadpool
 private:
     threadpool();
     ~threadpool();
-    static void* worker(void* arg);
+    static void* worker(void* arg);/* Call process() in an infinite loop. */
 
 private:
     pthread_t* m_threads;

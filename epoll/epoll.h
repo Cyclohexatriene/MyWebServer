@@ -42,7 +42,7 @@ public:
         epoll_event event;
         event.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
         event.data.fd = fd;
-        printf("adding read fd: %d\n",fd);
+        //printf("adding read fd: %d\n",fd);
         return epoll_ctl(epollfd,EPOLL_CTL_ADD,fd,&event);
     }
 
@@ -51,7 +51,7 @@ public:
         epoll_event event;
         event.events = EPOLLOUT | EPOLLET | EPOLLONESHOT;
         event.data.fd =fd;
-        printf("adding write fd: %d\n",fd);
+        //printf("adding write fd: %d\n",fd);
         bool flag = epoll_ctl(epollfd,EPOLL_CTL_ADD,fd,&event);
         epoll_ctl(epollfd, EPOLL_CTL_MOD, fd, &event);
         return flag;
@@ -59,7 +59,7 @@ public:
 
     int addfd(int fd, epoll_event* event)
     {
-        printf("adding fd: %d\n",fd);
+        //printf("adding fd: %d\n",fd);
         return epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, event);
     }
 

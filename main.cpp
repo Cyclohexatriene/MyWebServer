@@ -51,27 +51,27 @@ int main()
         for(int i = 0; i < n; i++)
         {
             epoll_event ev = events[i];
-            printf("fd = %d\n",ev.data.fd);
+            //printf("fd = %d\n",ev.data.fd);
             if(ev.data.fd == serv_sock)
             {
-                printf("epoll triggered.\n");
+                //printf("epoll triggered.\n");
                 int clntfd = accept(serv_sock,NULL,NULL);
-                printf("Received a request.\n");
+                //printf("Received a request.\n");
                 http* conn = new http();
                 conn -> clntfd = clntfd;
-                printf("clntfd is: %d\n",clntfd);
+                //printf("clntfd is: %d\n",clntfd);
                 fd2http[clntfd] = conn;
                 epoll::get_instance() -> addfd_wait4read(clntfd);
                 
             }
             else if(ev.events & EPOLLIN)
             {
-                printf("Received a package.\n");
+                //printf("Received a package.\n");
                 http* conn = fd2http[ev.data.fd];
-                printf("%s\n",conn -> package);
+                //printf("%s\n",conn -> package);
                 read(ev.data.fd, conn -> package, sizeof(conn -> package));
                 printf("%s\n",conn -> package);
-                printf("Datagram got.\n");
+                //printf("Datagram got.\n");
                 threadpool::get_instance() -> append(conn);
             }
             else if(ev.events & EPOLLOUT)
@@ -80,8 +80,9 @@ int main()
                 http* conn = fd2http[ev.data.fd];
                 
                 int byte_sent = writev(ev.data.fd, conn -> iov, sizeof(conn -> iov)/sizeof(iovec));
-                printf("Datagram sent, bytes: %d\n",byte_sent);
-                printf("errno: %d\n",errno);
+                //printf("Datagram sent, bytes: %d\n",byte_sent);
+                writev(1, conn -> iov, sizeof(conn -> iov)/sizeof(iovec));
+                //printf("errno: %d\n",errno);
                 //printf("%s%s%s\n",(char*)conn -> iov[0].iov_base,(char*)conn->iov[1].iov_base,(char*)conn->iov[2].iov_base);
                 
                 /*
@@ -96,6 +97,7 @@ int main()
                 epoll::get_instance() -> addfd_wait4read(ev.data.fd);
 
                 /* TODO: mmap & writev */
+                /* TODO: write loop */
             }
         }
     }
