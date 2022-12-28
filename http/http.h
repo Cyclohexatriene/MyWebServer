@@ -14,12 +14,16 @@ private:
     char state_line[64];
     char headers[256];
     int state; /* 0: wait for process; 1: ready to write; 2: bad request */
+
 public:
     http();
     http(char pack[], int fd);
     ~http();
     void process();
     int clntfd;
+
+private:
+    void response(char* filepath);
 
 public:
     char package[1024];

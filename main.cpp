@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <unordered_map>
 #include <errno.h>
+#include <fcntl.h>
 
 #include "log/my_time.h"
 #include "log/log.h"
@@ -55,7 +56,12 @@ int main()
             if(ev.data.fd == serv_sock)
             {
                 //printf("epoll triggered.\n");
+
+                /* Set cliend fd nonblock. */
                 int clntfd = accept(serv_sock,NULL,NULL);
+                int flag = fcntl(clntfd,F_GETFL);
+                fcntl(clntfd,F_SETFL,flag|O_NONBLOCK);
+                
                 printf("Received a request.\n");
                 http* conn = new http();
                 conn -> clntfd = clntfd;
@@ -66,10 +72,11 @@ int main()
             }
             else if(ev.events & EPOLLIN)
             {
-                printf("Received a package.\n");
+                //printf("Received a package.\n");
                 http* conn = fd2http[ev.data.fd];
                 //printf("%s\n",conn -> package);
                 read(ev.data.fd, conn -> package, sizeof(conn -> package));
+                conn -> package_str = string(conn -> package);
                 printf("%s\n",conn -> package);
                 //printf("Datagram got.\n");
                 threadpool::get_instance() -> append(conn);
