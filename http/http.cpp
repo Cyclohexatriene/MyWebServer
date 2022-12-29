@@ -87,23 +87,38 @@ void http::process()
         strncpy(request_type,package,4);
         request_type[4] = '\0';
         if(strcmp(request_type,"POST") == 0){
+            char request_path[128];
+            int idx = 5;
+            while(package[idx]!=' '){
+                request_path[idx-5] = package[idx];
+                idx++;
+            }
+            request_path[idx-5] = '\0';
             
             smatch m;
             regex e("\r\n\r\n");
             regex_search(package_str, m, e);
             printf("The posted info is: %s\n",m.suffix().str().c_str());
-            string posted_info = m.suffix().str();
-            string login, pass;
-            int idx = 6; // Cutoff "login="
-            while(posted_info[idx] != '&'){
-                login.push_back(posted_info[idx]);
-                idx++;
-            }
-            pass = posted_info.substr(idx+6); // Cutoff "&pass="
-            cout << "login = " << login << ", pass = " << pass << endl;
+            if(strcmp(request_path,"/dopost") == 0){
+                string posted_info = m.suffix().str();
+                string login, pass;
+                int idx = 6; // Cutoff "login="
+                while(posted_info[idx] != '&'){
+                    login.push_back(posted_info[idx]);
+                    idx++;
+                }
+                pass = posted_info.substr(idx+6); // Cutoff "&pass="
+                cout << "login = " << login << ", pass = " << pass << endl;
 
-            char filepath[128] = "./root/inforecved.html";
-            response(filepath);
+                char filepath[128] = {0};
+                if(login == "3200104203" && pass == "4203") strcat(filepath,"./root/login_successful.html");
+                else strcat(filepath,"./root/login_failed.html");
+                response(filepath);
+            }
+            else{
+                char filepath[128] = "./root/inforecved.html";
+                response(filepath);
+            }
             state = 1;
         }
         else{
